@@ -22,7 +22,6 @@ int* put_numbers_from_string_to_array(char* numbers, const int kol_vo_of_chosen)
     for (int i = 0; i < kol_vo_of_chosen; ++i)
         flow >> numb[i];
     return numb;
-    free(numb);
 }
 
 
@@ -31,7 +30,32 @@ void show_the_matrix(matrix* m, int type_of_elements) {
     for (int i = 0; i < m->size_of_matrix; i++) {
         for (int j = 0; j < m->size_of_matrix; j++) {
             if (m->type_of_elements == 1) {
-                printf("%d  ", *((int*)m->pointer_object + (i *ter_object = malloc(sizeof(int) * size_of_matrix * size_of_matrix);
+                printf("%d  ", *((int*)m->pointer_object + (i * m->size_of_matrix) + j));//*(s+i)=s[i]
+            }
+            else {
+                printf("%d + ", ((complex*)m->pointer_object + (i * m->size_of_matrix) + j)->real);
+                printf("%di ", ((complex*)m->pointer_object + (i * m->size_of_matrix) + j)->imaginary);
+            }
+        }
+        printf("\n");
+    }
+}
+void show_the_set_of_matrices(matrix* square_matrix[], int kol_vo_of_matrices) {
+    system("cls");
+    for (int i = 0; i < kol_vo_of_matrices; i++) {
+        cout << i + 1 << " " << "Square matrix:\n";
+        show_the_matrix(square_matrix[i], square_matrix[i]->type_of_elements);
+        cout << "----------------------------------------------------------";
+        cout << endl;
+    }
+    cout << endl;
+}
+
+
+
+matrix* fill_the_matrix(int type_of_elements, int size_of_matrix, char way_of_filling) {
+    matrix* m = new matrix[size_of_matrix];
+    m->pointer_object = malloc(sizeof(int) * size_of_matrix * size_of_matrix);
     m->type_of_elements = type_of_elements;
     m->size_of_matrix = size_of_matrix;
     for (int i = 0; i < m->size_of_matrix; i++) {
@@ -53,8 +77,6 @@ void show_the_matrix(matrix* m, int type_of_elements) {
         }
     }
     return m;
-    free(m->pointer_object);
-    delete[]m;
 }
 matrix* fill_the_matrices(matrix* square_matrix[], int kol_vo_of_matrices) {
     char c0, c1, c2;
@@ -70,7 +92,30 @@ matrix* fill_the_matrices(matrix* square_matrix[], int kol_vo_of_matrices) {
             case '1':
                 cout << "Enter the size of the future square matrix: ";
                 cin >> size_of_matrix;
-                           square_matrix[i] = fill_the_matrix(1, size_of_matrix, c2);
+                cout << endl;
+                menu2();
+                while (!(cin >> c1) || (c1 != '1') && (c1 != '2')) {
+                    cout << endl;
+                    cout << "Incorrectly selected number! Try to enter it again!\n";
+                    cout << endl;
+                    menu2();
+                }
+                cout << endl;
+                square_matrix[i] = fill_the_matrix(1, size_of_matrix, c1);
+                break;
+            case '2':
+                cout << "Enter the size of the future square matrix: ";
+                cin >> size_of_matrix;
+                cout << endl;
+                menu2();
+                while (!(cin >> c2) || (c2 != '1') && (c2 != '2')) {
+                    cout << endl;
+                    cout << "Incorrectly selected number! Try to enter it again!\n";
+                    cout << endl;
+                    menu2();
+                }
+                cout << endl;
+                square_matrix[i] = fill_the_matrix(2, size_of_matrix, c2);
                 break;
             default: cout << "Incorrectly selected number! Try to enter it again!\n"; cout << endl;
             }
@@ -95,7 +140,19 @@ matrix* multiplication_of_two_matrices(matrix* a, matrix* b) {
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
                     for (int r = 0; r < size; r++) {
-                        sum = sum + (*((int*)acomplex*)a->pointer_object + (i * size) + r)->imaginary * ((complex*)b->pointer_object + (r * size) + j)->real);
+                        sum = sum + (*((int*)a->pointer_object + (i * size) + r)) * (*((int*)b->pointer_object + (r * size) + j));
+                    }
+                    *((int*)m->pointer_object + (i * size) + j) = sum;
+                    sum = 0;
+                }
+            }
+        }
+        else {
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    for (int r = 0; r < size; r++) {
+                        sum_real = sum_real + (((complex*)a->pointer_object + (i * size) + r)->real * ((complex*)b->pointer_object + (r * size) + j)->real) - (((complex*)a->pointer_object + (i * size) + r)->imaginary * ((complex*)b->pointer_object + (r * size) + j)->imaginary);
+                        sum_imaginary = sum_imaginary + (((complex*)a->pointer_object + (i * size) + r)->real * ((complex*)b->pointer_object + (r * size) + j)->imaginary) + (((complex*)a->pointer_object + (i * size) + r)->imaginary * ((complex*)b->pointer_object + (r * size) + j)->real);
                     }
                     ((complex*)m->pointer_object + (i * size) + j)->real = sum_real;
                     ((complex*)m->pointer_object + (i * size) + j)->imaginary = sum_imaginary;
@@ -128,7 +185,34 @@ matrix* multiplication_of_two_matrices(matrix* a, matrix* b) {
                     sum_real = sum_real + (((complex*)a->pointer_object + (i * size) + r)->real * *((int*)b->pointer_object + (r * size) + j));
                     sum_imaginary = sum_imaginary + (((complex*)a->pointer_object + (i * size) + r)->imaginary * *((int*)b->pointer_object + (r * size) + j));
                 }
-e = square_matrix[numbers1[0] - 1]->size_of_matrix;
+                ((complex*)m->pointer_object + (i * size) + j)->real = sum_real;
+                ((complex*)m->pointer_object + (i * size) + j)->imaginary = sum_imaginary;
+                sum_real = 0;
+                sum_imaginary = 0;
+            }
+        }
+    }
+    return m;
+}
+void multiplication_of_matrices(matrix* square_matrix[], char* numbers, int kol_vo_of_matrices, int kol_vo_of_chosen) {
+    int flag = 0;
+    int flag1 = 0;
+    int o = 0;
+    int* numbers1 = new int[kol_vo_of_chosen];
+    numbers1 = put_numbers_from_string_to_array(numbers, kol_vo_of_chosen);
+    for (int i = 0; i < kol_vo_of_chosen; i++) {
+        for (int k = 0; k < kol_vo_of_matrices; k++) {
+            if (numbers1[i] - 1 == k) {
+                ++o;
+            }
+        }
+        if (o == 0) {
+            flag1 = 1;
+        }
+        o = 0;
+    }
+    if (flag1 != 1) {
+        int size = square_matrix[numbers1[0] - 1]->size_of_matrix;
         matrix* multiplication = new matrix[size];
         multiplication = square_matrix[numbers1[0] - 1];
         for (int j = 1; j < kol_vo_of_chosen; j++) {
@@ -171,7 +255,27 @@ void multiply_by_number(matrix* square_matrix[], int kol_vo_of_matrices) {
     m->size_of_matrix = size;
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            if (square_matrix[indint i = 0; i < size; i++) {
+            if (square_matrix[index - 1]->type_of_elements == 1) {
+                *((int*)m->pointer_object + (i * size) + j) = *((int*)square_matrix[index - 1]->pointer_object + (i * size) + j) * number;
+            }
+            else {
+                ((complex*)m->pointer_object + (i * size) + j)->real = ((complex*)square_matrix[index - 1]->pointer_object + (i * size) + j)->real * number;
+                ((complex*)m->pointer_object + (i * size) + j)->imaginary = ((complex*)square_matrix[index - 1]->pointer_object + (i * size) + j)->imaginary * number;
+            }
+        }
+    }
+    show_the_matrix(m, m->type_of_elements);
+    printf("\n");
+}
+
+
+
+matrix* sum_of_two_matrices(matrix* a, matrix* b) {
+    int size = a->size_of_matrix;
+    matrix* m = new matrix[size];
+    m->pointer_object = malloc(sizeof(int) * size * size);
+    m->size_of_matrix = size;
+    for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             if (a->type_of_elements == b->type_of_elements) {
                 m->type_of_elements = a->type_of_elements;
@@ -182,12 +286,22 @@ void multiply_by_number(matrix* square_matrix[], int kol_vo_of_matrices) {
                     ((complex*)m->pointer_object + (i * size) + j)->real = ((complex*)a->pointer_object + (i * size) + j)->real + ((complex*)b->pointer_object + (i * size) + j)->real;
                     ((complex*)m->pointer_object + (i * size) + j)->imaginary = ((complex*)a->pointer_object + (i * size) + j)->imaginary + ((complex*)b->pointer_object + (i * size) + j)->imaginary;
                 }
-
             }
-            elst);
-    delete[]m;
+            else if (a->type_of_elements == 1) {
+                m->type_of_elements = b->type_of_elements;
+                ((complex*)m->pointer_object + (i * size) + j)->real = *((int*)a->pointer_object + (i * size) + j) + ((complex*)b->pointer_object + (i * size) + j)->real;
+                ((complex*)m->pointer_object + (i * size) + j)->imaginary = ((complex*)b->pointer_object + (i * size) + j)->imaginary;
+            }
+            else {
+                m->type_of_elements = a->type_of_elements;
+                ((complex*)m->pointer_object + (i * size) + j)->real = ((complex*)a->pointer_object + (i * size) + j)->real + *((int*)b->pointer_object + (i * size) + j);
+                ((complex*)m->pointer_object + (i * size) + j)->imaginary = ((complex*)a->pointer_object + (i * size) + j)->imaginary;
+            }
+        }
+    }
+    return m;
 }
-void sum_of_matrices(matrix* square_matrix[], char* numbers, int kol_vo_of_matrices, int kol_vo_of_chosen) {//wrong-wrong!!!
+void sum_of_matrices(matrix* square_matrix[], char* numbers, int kol_vo_of_matrices, int kol_vo_of_chosen) {
     int flag = 0;
     int flag1 = 0;
     int o = 0;
@@ -232,14 +346,37 @@ void sum_of_matrices(matrix* square_matrix[], char* numbers, int kol_vo_of_matri
 
 int main() {
     srand(time(NULL));
-    setlocale(LC_ALL, "Russian");
     cout << "Be careful when entering the appropriate numbers or symbols!" << endl;
     cout << endl;
     int flag = 0, lighthouse = 0;
     int kol_vo_of_chosen;
     cout << "***Square matrices***\n";
     int kol_vo_of_matrix, helper;
-    cout << "Enter the number of matrices you in   ++lighthouse;
+    cout << "Enter the number of matrices you intend to create: ";
+    while (!(cin >> kol_vo_of_matrix) || (kol_vo_of_matrix <= 0)) {
+        cout << "Input error!\n";
+        cout << "Enter the number of matrices you intend to create: ";
+    }
+    cout << endl;
+    matrix* set_of_matrices = new matrix[kol_vo_of_matrix];
+    char* numbers = new char[100];
+    char c, c1;
+    do {
+        while (flag != 1) {
+            menu();
+            cin >> c;
+            cin.ignore(1024, '\n');
+            cout << endl;
+            if ((c == '2') && (lighthouse == 0)) { cout << "You have not created any matrix, correct the situation as soon as possible!\n" << endl; }
+            else { flag = 1; }
+        }
+        switch (c) {
+        case '1':
+            system("cls");
+            set_of_matrices = fill_the_matrices(&set_of_matrices, kol_vo_of_matrix);
+            show_the_set_of_matrices(&set_of_matrices, kol_vo_of_matrix);
+            flag = 0;
+            ++lighthouse;
             break;
         case '2':
             do {
@@ -258,7 +395,21 @@ int main() {
                         }
                         cin.ignore(1024, '\n');
                         cout << endl;
-                        cout <             cout << "Input error!\n";
+                        cout << "Which ones do you want to add up? Enter their numbers separated by a space: ";
+                        cin.getline(numbers, 100);
+                        cout << endl;
+                        sum_of_matrices(&set_of_matrices, numbers, kol_vo_of_matrix, kol_vo_of_chosen);
+                    }
+                    else {
+                        cout << "You have created only one matrix, to perform this action, you must have at least two. Fix the situation as soon as possible!\n" << endl;
+                    }
+                    break;
+                case '2':
+                    printf("\n");
+                    if (kol_vo_of_matrix >= 2) {
+                        cout << "You have entered more than one matrix. How many of them do you want to add up? Specify the quantity: ";
+                        while (!(cin >> kol_vo_of_chosen) || (kol_vo_of_chosen < 2) || ((kol_vo_of_chosen > kol_vo_of_matrix))) {
+                            cout << "Input error!\n";
                             cout << "You have entered more than one matrix. How many of them do you want to add up? Specify the quantity: ";
                         }
                         cin.ignore(1024, '\n');
@@ -288,166 +439,4 @@ int main() {
     delete[]set_of_matrices;
     delete[]numbers;
     return 0;
-} m->size_of_matrix) + j));//*(s+i)=s[i]
-            }
-            else {
-                printf("%d + ", ((complex*)m->pointer_object + (i * m->size_of_matrix) + j)->real);
-                printf("%di ", ((complex*)m->pointer_object + (i * m->size_of_matrix) + j)->imaginary);
-            }
-        }
-        printf("\n");
-    }
 }
-void show_the_set_of_matrices(matrix* square_matrix[], int kol_vo_of_matrices) {
-    system("cls");
-    for (int i t << "Enter the size of the future square matrix: ";
-                cin >> size_of_matrix;
-                cout << endl;
-                menu2();
-                while (!(cin >> c2) || (c2 != '1') && (c2 != '2')) {
-                    cout << endl;
-                    cout << "Incorrectly selected number! Try to enter it again!\n";
-                    cout << endl;
-                    menu2();
-                }
-                cout << endl;
-  ->pointer_object + (i * size) + r)) * (*((int*)b->pointer_object + (r * size) + j));
-                    }
-                    *((int*)m->pointer_object + (i * size) + j) = sum;
-                    sum = 0;
-                }
-            }
-        }
-        else {
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++) {
-                    for (int r = 0; r < size; r++) {
-                        sum_real = sum_real + (((ag1 = 0;
-    int o = 0;
-    int* numbers1 = new int[kol_vo_of_chosen];
-    numbers1 = put_numbers_from_string_to_array(numbers, kol_vo_of_chosen);
-    for (int i = 0; i < kol_vo_of_chosen; i++) {
-        for (int k = 0; k < kol_vo_of_matrices; k++) {
-            if (numbers1[i] - 1 == k) {
-                ++o;
-            }
-        }
-        if (o == 0) {
-            flag1 = 1;
-        }
-        o = 0;
-    }
-    if (flag1 != 1) {
-        int sizex - 1]->type_of_elements == 1) {
-                *((int*)m->pointer_object + (i * size) + j) = *((int*)square_matrix[index - 1]->pointer_object + (i * size) + j) * number;
-            }
-            else {
-                ((complex*)m->pointer_object + (i * size) + j)->real = ((complex*)square_matrix[index - 1]->pointer_object + (i * size) + j)->real * number;
-                ((complex*)m->pointer_object + (i * size) + j)->imaginary = ((complex* m->type_of_elements = a->type_of_elements;
-                ((complex*)m->pointer_object + (i * size) + j)->real = ((complex*)a->pointer_object + (i * size) + j)->real + *((int*)b->pointer_object + (i * size) + j);
-                ((complex*)m->pointer_object + (i * size) + j)->imaginary = ((complex*)a->pointer_object + (i * size) + j)->imaginary;
-            }
-        }
-    }
-    return m;
-    free(m->pointer_objectend to create: ";
-    while (!(cin >> kol_vo_of_matrix) || (kol_vo_of_matrix <= 0)) {
-        cout << "Input error!\n";
-        cout << "Enter the number of matrices you intend to create: ";
-    }
-    cout << endl;
-    matrix* set_of_matrices = new matrix[kol_vo_of_matrix];
-    char* numbers = new char[100];
-    char c, c1;
-    do {
-        while (flag != 1) {
-            menu();
-            cin >> c;
-            cin.ignore(1024, '\n');
-            cout << endl;
-            if ((c == '2') && (lighthouse == 0)) { cout << "You have not created any matrix, correct the situation as soon as possible!\n" << endl; }
-            else { flag = 1; }
-        }
-        switch (c) {
-        case '1':
-            system("cls");
-            set_of_matrices = fill_the_matrices(&set_of_matrices, kol_vo_of_matrix);
-            show_the_set_of_matrices(&set_of_matrices, kol_vo_of_matrix);
-            flag = 0;
-         < "Which ones do you want to add up? Enter their numbers separated by a space: ";
-                        cin.getline(numbers, 100);
-                        cout << endl;
-                        sum_of_matrices(&set_of_matrices, numbers, kol_vo_of_matrix, kol_vo_of_chosen);
-                    }
-                    else {
-                        cout << "You have created only one matrix, to perform this action, you must have at least two. Fix the situation as soon as possible!\n" << end     menu2();
-                while (!(cin >> c1) || (c1 != '1') && (c1 != '2')) {
-                    cout << endl;
-                    cout << "Incorrectly selected number! Try to enter it again!\n";
-                    cout << endl;
-                    menu2();
-                }
-                cout << endl;
-                square_matrix[i] = fill_the_matrix(1, size_of_matrix, c1);
-                break;
-            case '2':
-                coucomplex*)a->pointer_object + (i * size) + r)->real * ((complex*)b->pointer_object + (r * size) + j)->real) - (((complex*)a->pointer_object + (i * size) + r)->imaginary * ((complex*)b->pointer_object + (r * size) + j)->imaginary);
-                        sum_imaginary = sum_imaginary + (((complex*)a->pointer_object + (i * size) + r)->real * ((complex*)b->pointer_object + (r * size) + j)->imaginary) + (((                ((complex*)== 1) {
-                m->type_of_elements = b->type_of_elements;
-                ((complex*)m->pointer_object + (i * size) + j)->real = *((int*)a->pointer_object + (i * size) + j) + ((complex*)b->pointer_object + (i * size) + j)->real;
-                ((complex*)m->pointer_object + (i * size) + j)->imaginary = ((complex*)b->pointer_object + (i * size) + j)->imaginary;
-            }
-            else {
-               l;
-                    }
-                    break;
-                case '2':
-                    printf("\n");
-                    if (kol_vo_of_matrix >= 2) {
-                        cout << "You have entered more than one matrix. How many of them do you want to add up? Specify the quantity: ";
-                        while (!(cin >> kol_vo_of_chosen) || (kol_vo_of_chosen < 2) || ((kol_vo_of_chosen > kol_vo_of_matrix))) {
-               = 0; i < kol_vo_of_matrices; i++) {
-        cout << i + 1 << " " << "Square matrix:\n";
-        show_the_matrix(square_matrix[i], square_matrix[i]->type_of_elements);
-        cout << "----------------------------------------------------------";
-        cout << endl;
-    }
-    cout << endl;
-}
-
-
-
-matrix* fill_the_matrix(int type_of_elements, int size_of_matrix, char way_of_filling) {
-    matrix* m = new matrix[size_of_matrix];
-    m->poin   cout << endl;
-           m->pointer_object + (i * size) + j)->real = sum_real;
-                ((complex*)m->pointer_object + (i * size) + j)->imaginary = sum_imaginary;
-                sum_real = 0;
-                sum_imaginary = 0;
-            }
-        }
-    }
-    return m;
-    free(m->pointer_object);
-    delete[]m;
-}
-void multiplication_of_matrices(matrix* square_matrix[], char* numbers, int kol_vo_of_matrices, int kol_vo_of_chosen) {
-    int flag = 0;
-    int fl)square_matrix[index - 1]->pointer_object + (i * size) + j)->imaginary * number;
-            }
-        }
-    }
-    show_the_matrix(m, m->type_of_elements);
-    printf("\n");
-    free(m->pointer_object);
-    delete[]m;
-}
-
-
-
-matrix* sum_of_two_matrices(matrix* a, matrix* b) {
-    int size = a->size_of_matrix;
-    matrix* m = new matrix[size];
-    m->pointer_object = malloc(sizeof(int) * size * size);
-    m->size_of_matrix = size;
-    for (e if (a->type_of_elements 
