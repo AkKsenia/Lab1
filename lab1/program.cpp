@@ -63,12 +63,12 @@ matrix* fill_the_matrix(int type_of_elements, int size_of_matrix, char way_of_fi
             if (type_of_elements == 1) {
                 if (way_of_filling == '1') {
                     printf("Enter %dx%d matrix element: ", i, j);
-                    scanf("%d", (int*)m->pointer_object + (i * m->size_of_matrix) + j);
+                    cin >> *((int*)m->pointer_object + (i * m->size_of_matrix) + j);
                 } else *((int*)m->pointer_object + (i * m->size_of_matrix) + j) = rand();
             }
             else if (way_of_filling == '1') {
                 printf("Enter %dx%d matrix element in the format [a b], where a and b are the real and imaginary parts of the complex number (a +bi): ", i, j);
-                scanf("%d %d", &(((complex*)m->pointer_object + (i * m->size_of_matrix) + j)->real), &(((complex*)m->pointer_object + (i * m->size_of_matrix) + j)->imaginary));
+                cin >> (((complex*)m->pointer_object + (i * m->size_of_matrix) + j)->real) >> (((complex*)m->pointer_object + (i * m->size_of_matrix) + j)->imaginary);
             }
             else {
                 ((complex*)m->pointer_object + (i * m->size_of_matrix) + j)->real = rand();
